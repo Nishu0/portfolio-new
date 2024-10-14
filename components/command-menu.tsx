@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { DialogProps } from "@radix-ui/react-alert-dialog"
+import { AlertDialogProps } from "@radix-ui/react-alert-dialog"
 import { CommandIcon } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -20,7 +20,7 @@ import {
   CommandSeparator,
 } from "./ui/command"
 
-export default function CommandMenu({ ...props }: DialogProps) {
+export default function CommandMenu({ ...props }: AlertDialogProps) {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const { setTheme } = useTheme()
@@ -47,7 +47,7 @@ export default function CommandMenu({ ...props }: DialogProps) {
       <Button
         variant="ghost"
         size="sm"
-        className="size-8 px-0"
+        className="px-0 size-8"
         onClick={() => setOpen(true)}
         {...props}
       >
@@ -86,15 +86,15 @@ export default function CommandMenu({ ...props }: DialogProps) {
 
           <CommandGroup heading="Theme">
             <CommandItem onSelect={() => runCommand(() => setTheme("light"))}>
-              <Icons.sun className="mr-2 h-4 w-4" />
+              <Icons.sun className="w-4 h-4 mr-2" />
               Light
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme("dark"))}>
-              <Icons.moon className="mr-2 h-4 w-4" />
+              <Icons.moon className="w-4 h-4 mr-2" />
               Dark
             </CommandItem>
             <CommandItem onSelect={() => runCommand(() => setTheme("system"))}>
-              <Icons.laptop className="mr-2 h-4 w-4" />
+              <Icons.laptop className="w-4 h-4 mr-2" />
               System
             </CommandItem>
           </CommandGroup>
@@ -111,7 +111,7 @@ interface MenuCommandProps {
 
 const MenuCommandItem = ({ value, onSelect }: MenuCommandProps) => (
   <CommandItem value={value} onSelect={onSelect}>
-    <Icons.file className="mr-2 h-4 w-4" />
+    <Icons.file className="w-4 h-4 mr-2" />
     <span>{value}</span>
   </CommandItem>
 )
