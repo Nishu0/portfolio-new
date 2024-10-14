@@ -7,13 +7,13 @@ import {
   ContributionsDay,
 } from "@/types/github"
 
-const GITHUB_API_URL = "https://api.github.com/users/trinhdinhtai"
+const GITHUB_API_URL = "https://api.github.com/users/nishu0"
 
 async function getGithubStats() {
   try {
     const [userResponse, reposResponse] = await Promise.all([
       fetch(GITHUB_API_URL),
-      fetch("https://api.github.com/users/trinhdinhtai/repos?per_page=100"),
+      fetch("https://api.github.com/users/nishu0/repos?per_page=100"),
     ])
 
     const user = (await userResponse.json()) as GitHubUser
@@ -76,7 +76,7 @@ async function getGithubActivities() {
             }
           `,
     variables: {
-      LOGIN: "trinhdinhtai",
+      LOGIN: "nishu0",
       FROM: from,
       TO: to,
     },

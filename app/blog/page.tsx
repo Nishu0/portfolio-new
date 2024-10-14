@@ -20,7 +20,7 @@ const BlogPage = () => {
     <>
       <PageHeading
         title="Blog"
-        description={`In December 2021, I began producing articles, mostly regarding software and information sharing. On my blog, I have written ${posts.length} items in total. In the search box below, you can look for articles by title.`}
+        description={`In December 2022, I began producing articles, mostly regarding software and information sharing. On my blog, I have written ${posts.length} items in total. In the search box below, you can look for articles by title.`}
       />
 
       <FilteredPost posts={posts} />

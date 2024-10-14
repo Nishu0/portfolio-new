@@ -1,39 +1,39 @@
 ---
-title: "Next.js 14 có gì mới ? - Intercepting Routes"
-description: "Trong version 14, Next.js đã giới thiệu hai mẫu định tuyến nâng cao: **Parallel Routes** và **Intercepting Routes**. Trong phạm vi bài viết này, mình sẽ giới thiệu về **Intercepting Routes** nhé. Let's go!"
+title: "What's new in Next.js 14? - Intercepting Routes"
+description: "In version 14, Next.js introduced two advanced routing patterns: Parallel Routes and Intercepting Routes. Within the scope of this article, I will introduce Intercepting Routes."
 date: "2023-12-29"
 image: https://res.cloudinary.com/daukjyo6s/image/upload/v1706598055/twitter-card_sznp94.png
 authors:
-  - taitd
+  - nisarg
 series:
   order: 2
   title: "Next.js"
 ---
 
-Trong version 14, Next.js đã giới thiệu hai mẫu định tuyến nâng cao: **Parallel Routes** và **Intercepting Routes**. Trong phạm vi bài viết này, mình sẽ giới thiệu về **Intercepting Routes** nhé. Let's go!
+In version 14, Next.js introduced two advanced routing patterns: **Parallel Routes** and **Intercepting Routes**. Within the scope of this article, I will introduce **Intercepting Routes**. Let's go!
 
-## 1. Intercepting Routes là gì ?
+## 1. What are Intercepting Routes?
 
-**Intercepting Routes** cho phép bạn **chặn hoặc dừng hành vi định tuyến mặc định** để hiển thị một chế độ xem hoặc thành phần thay thế khi điều hướng qua giao diện người dùng, trong khi vẫn duy trì tuyến đường dự định cho các tình huống như tải lại trang. Nó thường được sử dụng khi bạn muốn hiển thị tuyến đường trong khi vẫn giữ nguyên ngữ cảnh của trang hiện tại.
+**Intercepting Routes** allows you to **intercept or stop default routing behavior** to display an alternative view or component when navigating through the UI, while still maintaining the route intended for situations like page reloads. It is often used when you want to display a route while preserving the context of the current page.
 
-Hãy lấy vài ví dụ để dễ hiểu hơn.
+Let's take a few examples to make it easier to understand.
 
 ### Login modal
 
-Giả sự bạn có thanh navigation bar với 1 link là `/login`, theo truyền thống, khi click vào link thì sẽ được chuyển hướng tới trang đăng nhập đầy đủ, nhưng với **Intercepting Routes**, bạn hoàn toàn có thể hiển thị login modal trong khi URL phản ánh route `/login`, giúp link có thể chia sẻ được và đảm bảo trang đăng nhập đầy đủ được hiển thị khi tải lại trang hoặc truy cập trực tiếp từ URL.
+Suppose you have a navigation bar with a link called `/login`, traditionally, clicking on the link will redirect you to the full login page, but with **Intercepting Routes**, you can displays the login modal while the URL reflects the `/login` route, making the link shareable and ensuring the full login page is displayed when reloading the page or accessing directly from the URL.
 
-### Ứng dụng bảng tin
+### Message board application
 
-Ở trên các ứng dụng mạng xã hội, ví dụ như facebook, khi bạn click vào ảnh thường sẽ điều hướng đến một trang mới dành riêng cho hình ảnh đó. Với **Intercepting Routes**, việc nhấp vào ảnh sẽ mở ra một modal ở trên trang hiện tại, hiển thị ảnh phóng to. URL cập nhật để phản ánh ảnh đã chọn, vẫn có thể chia sẻ được. Truy cập URL trực tiếp hoặc tải lại trang sẽ dẫn đến chế độ xem toàn trang của ảnh.
+On social networking applications, such as Facebook, when you click on a photo it will usually navigate to a new page dedicated to that image. With **Intercepting Routes**, clicking on an image opens a modal above the current page, displaying an enlarged image. The URL updates to reflect the selected photo, which is still shareable. Visiting the URL directly or reloading the page will result in a full-page view of the photo.
 
-## 2. Triển khai Intercepting Routes trong Next.js
+## 2. Implement Intercepting Routes in Next.js
 
-Đầu tiên, tạo 2 route `/feed` và `/feed/photo`, ở trang feed, tạo một thẻ `Link` chuyển hướng tới `feed/photo`
+First, create two routes `/feed` and `/feed/photo`, on the feed page, create a `Link` tag that redirects to `feed/photo`
 
-- `app/feed/page.tsx`: Đại diện cho route `localhost:3000/feed`.
-- `app/feed/photo/page.tsx`: Đại diện cho route `localhost:3000/feed/photo`.
+- `app/feed/page.tsx`: Represents route `localhost:3000/feed`.
+- `app/feed/photo/page.tsx`: Represents route `localhost:3000/feed/photo`.
 
-Cấu trúc thư mục sẽ như sau:
+The directory structure will be as follows:
 
 <FolderTree
   data={[

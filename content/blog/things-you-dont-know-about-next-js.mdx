@@ -1,6 +1,6 @@
 ---
-title: "Có thể bạn chưa biết về Next.js (v13+)"
-description: Ở trong bài viết này, mình sẽ cùng tìm hiểu về một số thứ hay ho mà có thể bạn đã bỏ lỡ trong Next.js (dĩ nhiên là từ Next.js 13+) nhé. Let's go.
+title: "You may not know about Next.js (v13+)"
+description: In this article, I will learn about some cool things that you may have missed in Next.js (of course from Next.js 13+). Let's go.
 image: https://res.cloudinary.com/daukjyo6s/image/upload/v1706598055/twitter-card_sznp94.png
 date: "2024-01-30"
 authors:
@@ -10,26 +10,25 @@ series:
   title: "Next.js"
 ---
 
-Cho đến thời điểm bài viết này được publish thì version mới nhất của Next.js đang là 14.1.0, tuy nhiên nhìn chung thì version 14 chỉ là một bản cập nhật mang lại sự tối ưu cũng như ổn định cho version 13 chứ không có nhiều khái niệm mới.
+Up to the time this article was published, the latest version of Next.js is 14.1.0, but in general, version 14 is just an update that brings optimization and stability to version 13, not There are many new concepts.
 
-Ở trong bài viết này, mình sẽ cùng tìm hiểu về một số thứ hay ho mà có thể bạn đã bỏ lỡ trong Next.js (dĩ nhiên là từ Next.js 13+) nhé. Let's go.
+In this article, I will learn about some cool things that you may have missed in Next.js (of course from Next.js 13+). Let's go.
 
 ## 1. Route group
 
-Hãy nhìn vào cây thư mục sau:
+Take a look at the following directory tree:
 
 ![](https://miro.medium.com/v2/resize:fit:439/1*sH3RtYmOOApgi_au3cWfMw.png)
 
-Bạn có thấy các folder đang được sắp xếp rất lộn xộn ? Next.js sử dụng file-system base router, tức là các route được định nghĩa dựa vào các file và folder. Sắp xếp folder một cách lộn xộn khiến cho việc tìm kiếm một route cụ thể trở nên khó khăn hơn, đó là lý do mà Route Groups ra đời.
-Đúng như ý nghĩa tên gọi của nó, Route Groups giúp bạn nhóm các route có cùng chung một logic mà không làm ảnh hưởng đến cấu trúc đường dẫn URL.
+Do you see that the folders are arranged very chaotically? Next.js uses file-system base router, meaning routes are defined based on files and folders. Organizing folders in a haphazard manner makes finding a specific route more difficult, which is why Route Groups were born. True to its name, Route Groups helps you group routes that share the same logic without affecting the URL structure.
 
-Dưới đây là cách tái cấu trúc thư mục trên bằng cách sử dụng Route Groups.
+Here's how to restructure the above directory using Route Groups.
 
 ![](https://miro.medium.com/v2/resize:fit:385/1*Z_ZV_c6bz2Xf7GCBnyHy1A.png)
 
-Những route như `/forgot-password`, `sign-in`, `sign-up` được nhóm thành group `(auth)`, còn lại được nhóm vào group `(dashboard)`, clear hơn nhiều chứ nhỉ ?
+Routes like `/forgot-password`, `sign-in`, `sign-up` are grouped into groups `(auth)`, the rest are grouped into groups `(dashboard)`, much clearer, right? ?
 
-Vầ tất nhiên là Route Group sẽ không thêm tên thư mục vào URL.
+And of course, Route Group will not add the directory name to the URL.
 
 **URL: `http:localhost:3000/sign-in`**
 
@@ -37,23 +36,22 @@ Vầ tất nhiên là Route Group sẽ không thêm tên thư mục vào URL.
 
 ## 2. Static Metadata
 
-Next.js bao gồm sẵn Metadata API giúp bạn định nghĩa metadata cho ứng dụng (ví dụ thẻ `meta` và thẻ `link` bên trong thẻ `head` của file HTML) để cải thiện SEO và khả năng chia sẻ ứng dụng.
-Bạn có thể sử dụng Metadata API ở trong cả `page.tsx` hoặc `layout.tsx` như thế này:
+Next.js includes a built-in Metadata API that helps you define application metadata (e.g. `meta` and `link` tags within the `head` tag of an HTML file) to improve SEO and app shareability. You can use the Metadata API in either page.tsx or layout.tsx like this:
 
 ```tsx
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
-  title: "TaiTD Blog",
+  title: "Nisarg Thakkar",
   description: "Blog created by Nisarg Thakkar",
 }
 ```
 
 ## 3. Dynamic Metadata
 
-Trong ứng dụng, có những route sẽ sử dụng Metadata động, ví dụ như mỗi bài viết cụ thể hoặc là mỗi một sản phẩm bất kỳ trên trang web sẽ có metadata khác nhau. Về cơ bản có thể hiểu là Dynamic Route thì sẽ có Dynamic Metadata.
+In the application, there are routes that will use dynamic Metadata, for example, each specific article or each product on the website will have different metadata. Basically, it can be understood that Dynamic Route will have Dynamic Metadata.
 
-Trong trường hợp này, chúng ta cần sử dụng hàm `generateMetadata` để `fetch` metadata động cho route, ví dụ như sau:
+In this case, we need to use functions `generateMetadata` to `fetch` dynamic metadata for the route, for example:
 
 ```tsx
 import type { Metadata } from "next"
@@ -79,30 +77,30 @@ export default function FavouriteProductDetails({ params }: Props) {
 
 ![](https://miro.medium.com/v2/resize:fit:700/1*F1-MbywRmhfdEiV3ZoEsgA.png)
 
-Tiêu đề của trang được thay đổi dựa vào id sản phẩm.
+The page title is changed based on the product id.
 
 ## 4. Private Routes (Private Folder)
 
-Private Folder có thể được tạo bằng cách thêm tiền tố `_` vào thư mục `folderName`.
+Private Folders can be created by adding the prefix `_` to the folder `folderName`.
 
-Khi đó, hệ thống định tuyến sẽ coi như **thư mục này và tất cả các thư mục con của nó** không tham gia vào routing.
+Then, the routing system will assume that **this directory and all its subdirectories** do not participate in routing.
 
 ![An example folder structure using private folders](https://nextjs.org/_next/image?url=%2Fdocs%2Fdark%2Fproject-organization-private-folders.png&w=3840&q=75&dpl=dpl_6Qir2sLFUSLWxJxpLbUBoZRU9wXc)
 
-Private folder nên được sử dụng khi nào ?
+When should private folders be used?
 
-- Tách UI logic khỏi routing logic.
-- Sắp xếp nhất quán các tệp nội bộ trong toàn bộ dự án Next.js
-- Sắp xếp và nhóm các tập tin trong code editor.
-- Tránh xung đột đặt tên với các quy ước tệp Next.js trong tương lai.
+- Separate UI logic from routing logic.
+- Consistent arrangement of internal files across the entire Next.js project
+- Organize and group files in the code editor.
+- Avoid naming conflicts with future Next.js file conventions.
 
 ## 5. Catch-all Segments
 
-Trong Next.js, "segment" thường được dùng để chỉ "một phần" hoặc là "một phân đoạn" của một URL. Ví dụ, trong URL `https://example.com/posts/first-post`, có thể coi "posts" và "first-post" là các "segment" của URL.
+In Next.js, "segment" is often used to refer to "a part" or "a segment" of a URL. For example, in the URL `https://example.com/posts/first-post`, "posts" and "first-post" can be considered "segments" of the URL.
 
-Dynamic Segments có thể được mở rộng để bắt tất cả các subsequent segments bằng cách thêm dấu `...` bên trong `segmentName` như sau: `[...segmentName]`
+Dynamic Segments can be extended to capture all subsequent segments by adding a `...` inside `segmentName` like so: `[...segmentName]`
 
-Ví dụ: `/docs/[...slug]/page.tsx` sẽ khớp với `/docs/topic` , nhưng cũng khớp với `/docs/topic/10` , hoặc là `/docs/topic/10/section/1`, tuy nhiên không khớp với `/docs`
+For example, `/docs/[...slug]/page.tsx` will match `/docs/topic` , but also `/docs/topic/10` , or `/docs/topic/10 /section/1`, however does not match `/docs`
 
 ![](https://miro.medium.com/v2/resize:fit:700/1*ecPaz26WH8zyuHGyfRzCzA.png)
 
@@ -110,7 +108,7 @@ Ví dụ: `/docs/[...slug]/page.tsx` sẽ khớp với `/docs/topic` , nhưng c�
 
 ![](https://miro.medium.com/v2/resize:fit:692/1*Q-YRWaHa4-4OD0hHYVMImw.png)
 
-Dưới đây là đoạn code ví dụ:
+Below is the example code:
 
 ```tsx title="app/docs/[...slug]/page.tsx" showLineNumbers
 import React from "react"
@@ -131,23 +129,23 @@ export default function SlugPage({ params: { slug } }: Params) {
 }
 ```
 
-Liệu chúng ta có thể sửa được lỗi `404`của route `/docs` không ? Cùng tiếp tục tới phần tiếp theo nhé.
+Can we fix the `404` error of the `/docs` route? Let's continue to the next part.
 
 ## 6. Optional Catch-All Segments
 
-Catch-all Segments có thể được đặt thành tùy chọn bằng cách đưa tham số vào dấu ngoặc vuông kép: `[[...segmentName]]`.
+Catch-all Segments can be made optional by enclosing the parameter in double square brackets: `[[...segmentName]]`.
 
-Ví dụ: `/docs/[[...slug]]/page.tsx` cũng sẽ khớp với `/docs`, ngoài `/docs/topic`, `/docs/topic/10`.
+For example, `/docs/[[...slug]]/page.tsx` will also match `/docs`, in addition to `/docs/topic`, `/docs/topic/10`.
 
 ![](https://miro.medium.com/v2/resize:fit:603/1*Ojd3eOmtkmOoQd3GBKiRAg.png)
 
 ## 7. Active Links
 
-Bạn có một navigation bar với các menu link, làm cách nào để user biết được mình đang view trang nào ở trên màn hình ?
+You have a navigation bar with menu links, how does the user know which page he or she is viewing on the screen?
 
-Việc highlight active link giúp cho trải nghiệm người dùng tốt hơn rất nhiều, dưới đây là cách giúp bạn làm được điều đó.
+Highlighting active links makes the user experience much better, here's how to help you do that.
 
-Tạo file `navbar.tsx` trong thư mục `components`, đây là client component - do có tính tương tác với user thông qua menu item, hãy thêm `use client` ở đầu file.
+Create a `navbar.tsx` file in the `components` folder, this is the client component - since it interacts with the user through the menu item, add `use client` at the top of the file.
 
 ```tsx showLineNumbers
 "use client"
@@ -195,13 +193,13 @@ export default function Navbar() {
 }
 ```
 
-Okey, ở đoạn code trên, mình đã tạo ra một navigation bar chứa 2 link có path là `/sign-in` và `/favourite`, UI của nó như sau:
+Okey, in the above code, I have created a navigation bar containing 2 links with the path `/sign-in` and `/favourite`, its UI is as follows:
 
 ![](https://miro.medium.com/v2/resize:fit:581/1*DwZDyIkHyN8Sm-7Hh1wCww.png)
 
-Click link và xem nó có gì thay đổi so với các link còn lại:
+Click the link and see what changes it has compared to the other links:
 
 ![](https://miro.medium.com/v2/resize:fit:668/1*VfvVhZXLMZ3nkLgIsCirsw.png)
 
-Và trên đây là một vài khái niệm trong Next.js 13+ mà có thể bạn đã bỏ lỡ 👌  
-Nếu thấy bài viết hay, hãy cho mình một like nhé ✅
+And above are a few concepts in Next.js 13+ that you may have missed 👌  
+If you find the article good, please give me a like ✅

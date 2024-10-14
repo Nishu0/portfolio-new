@@ -18,6 +18,7 @@ export default function Stats() {
     queryKey: ["wakatimeData"],
     queryFn: () => fetch("/api/stats/wakatime").then((res) => res.json()),
   })
+  console.log("Walatime", wakatimeData)
 
   const { data: umamiData } = useQuery({
     queryKey: ["umamiData"],
@@ -78,7 +79,7 @@ export default function Stats() {
     },
     {
       title: "Blog Views",
-      value: umamiData?.data.pageviews.value,
+      value: umamiData?.data?.pageviews?.value,
       description: "Total blog views",
       link: "https://us.umami.is/share/1hfu7snOAr7VkPJj/taitd.io.vn",
     },
