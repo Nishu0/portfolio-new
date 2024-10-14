@@ -4,27 +4,61 @@ const database = new PrismaClient()
 
 async function run() {
   try {
-    await database.stack.createMany({
-      data: [{ name: "Next.js" }, { name: "React" }, { name: "Git" }],
-    })
+    // await database.stack.createMany({
+    //   data: [
+    //     { name: "Move" },
+    //     { name: "Rust" },
+    //     { name: "React" },
+    //     { name: "Solidity" },
+    //     { name: "Nextjs" },
+    //     { name: "Expressjs" },
+    //   ],
+    // })
     await database.project.createMany({
       data: [
         {
-          title: "Personal portfolio",
-          slug: "taitd.io.vn",
+          title: "Pixel Gaming",
+          slug: "pixel-gaming",
           description:
-            "My personal portfolio website, built with Next.js, Tailwind CSS, and TypeScript. It's a place where I can showcase my work and share my thoughts.",
-          imageUrl: "/images/projects/blog.png",
-          githubUrl: "https://github.com/trinhdinhtai/next-blog",
+            "Pixel Gaming Gambling Platform is a decentralized gaming experience built on Arweave, featuring a variety of gambling and session based games with secure, transparent transactions.",
+          imageUrl: "/images/projects/pixel_gaming.png",
+          githubUrl: "https://pixelgaming.us/",
           isFeature: true,
         },
         {
-          title: "Background snippets",
-          slug: "bg-snippets",
+          title: "FluXtream - Send Token as Stream ",
+          slug: "fluxtream",
           description:
-            "Collections of ready-to-use, simply copy and paste into your next project. All snippets crafted with Tailwind CSS and Vanilla CSS for easy integration.",
-          imageUrl: "/images/projects/bg-snippets.png",
-          githubUrl: "https://github.com/trinhdinhtai/next-bg-snippets",
+            "Redefining the Way DAOs and Crypto Businesses Streamline Subscriptions, Salaries, and Rewards with Asset Streaming Protocol. FluXtream is based on Aptos Blockchain which uses Byzantine Fault Tolerance",
+          imageUrl: "/images/projects/fluxtream.png",
+          githubUrl: "https://github.com/orgs/FluXtream-Move/repositories",
+          isFeature: true,
+        },
+        {
+          title: "Anime NFT MarketPlace",
+          slug: "anime-nft-marketplace",
+          description:
+            "The Anime NFT Marketplace Dapp is a platform for anime lovers and collectors who want to buy, sell, or auction anime-related NFTs. The marketplace was integrated with the InterPlanetary File System(IPFS).",
+          imageUrl: "/images/projects/anime-marketplace.png",
+          githubUrl: "https://github.com/Nishu0/anime_nft_marketplace",
+          isFeature: true,
+        },
+        {
+          title: "Sketcherly - Collaborative Dashboard",
+          slug: "sketcherly",
+          description:
+            " Sketcherly, a real-time collaborative design platform for over 500 users, integrating Unsplash Image API and React Icons for 50% faster asset access. AWS Amplify ensured the security of 200 monthly authentication requests.",
+          imageUrl: "/images/projects/sketcherly.png",
+          githubUrl: "https://sketcherly.vercel.app/",
+          isFeature: true,
+        },
+        {
+          title: "BlockFlicks",
+          slug: "blockFlicks",
+          description:
+            "BlockFlicks provides a transparent and decentralized environment, where creators can interact with their audience and get direct feedback on their content.",
+          imageUrl: "/images/projects/blockflicks.png",
+          githubUrl: "https://block-flicks.vercel.app/",
           isFeature: true,
         },
       ],

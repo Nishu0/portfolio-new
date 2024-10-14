@@ -2,22 +2,22 @@ import { Icons } from "@/components/icons"
 
 export const experiencesData = [
   {
-    title: "Back-end Developer",
-    name: "Luvina Software JSC",
+    title: "Move Smart Contract Developer",
+    name: "Qiro Finance",
     description:
-      "I worked as a front-end developer for 2 years in 1 job and 1 year in another job. I also upskilled to the full stack.",
-    logo: "https://itviec.com/rails/active_storage/representations/proxy/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBBekFwREE9PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--ab1a3e8aa01021c402d131a97d589d4ea09fd517/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaDdCem9MWm05eWJXRjBTU0lJYW5CbkJqb0dSVlE2RW5KbGMybDZaVjkwYjE5bWFYUmJCMmtCcWpBPSIsImV4cCI6bnVsbCwicHVyIjoidmFyaWF0aW9uIn19--89a7283b6fdfb4208cdc2b440a36613a6fae974c/luvina-software-logo.jpg",
-    startDate: "2019/02/29",
-    endDate: "2022/05/13",
-    url: "https://luvina.net",
+      "Working on Move smart contracts for efficient asset tokenization and securitization, enhancing real-world asset-backed lending. A global private credit marketplace, integrating on-chain solutions with emerging market fintech borrowers for fixed yield opportunities",
+    logo: "https://res.cloudinary.com/dyk5s8gbw/image/upload/v1717438870/fhpgfmybp1kz2en3pbte.png",
+    startDate: "2024/02/25",
+    url: "https://www.qiro.fi/",
   },
   {
-    title: "Front-end Developer",
-    name: "GM Solutions",
+    title: "Web3 Full Stack Developer",
+    name: "eInfochip",
     description:
       "Frontend developer tasked with building and ensuring the completion of back-office web application",
-    logo: "https://gm-group.vn/wp-content/uploads/2023/07/logo.png",
-    startDate: "2022/09/13",
-    url: "https://gm-group.vn",
+    logo: "https://res.cloudinary.com/dyk5s8gbw/image/upload/v1728926568/o6qcldi1hmwxvd2nycui.png",
+    startDate: "2024/05/05",
+    endDate: "2024/07/30",
+    url: "https://www.einfochips.com/",
   },
 ]

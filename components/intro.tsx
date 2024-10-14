@@ -14,7 +14,7 @@ const Intro = () => {
   return (
     <section className="flex min-h-[calc(100vh-80px)] items-center">
       <div className="container flex flex-col items-center justify-between gap-12 lg:flex-row">
-        <div className="flex flex-col text-center gap-y-4 lg:w-1/2 lg:text-left">
+        <div className="flex flex-col gap-y-4 text-center lg:w-1/2 lg:text-left">
           <motion.span
             className="text-2xl font-bold leading-[1.5] sm:text-4xl lg:text-6xl"
             initial={{ opacity: 0, y: 20 }}
@@ -52,17 +52,17 @@ const Intro = () => {
               className={cn(buttonVariants({ variant: "default" }), "group")}
             >
               Contact me
-              <Icons.arrowRight className="w-4 h-4 ml-2 transition group-hover:translate-x-1" />
+              <Icons.arrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
             </Link>
 
             <Link
-              href="/resume.pdf"
+              href="/Resume.pdf"
               aria-label="resume"
-              download
+              target="_blank"
               className={cn(buttonVariants({ variant: "outline" }), "group")}
             >
               My Resume
-              <Icons.download className="w-4 h-4 ml-2 transition group-hover:translate-y-1" />
+              <Icons.download className="ml-2 h-4 w-4 transition group-hover:translate-y-1" />
             </Link>
           </motion.div>
         </div>

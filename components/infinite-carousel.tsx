@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import {
   IMAGE_EIGHT,
   IMAGE_ELEVEN,
@@ -42,36 +42,56 @@ const images: CarouselImage[] = [
 
 const InfiniteImageCarousel: React.FC = () => {
   const [offset, setOffset] = useState(0)
+  const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setOffset((prevOffset) => (prevOffset + 1) % (images.length * 100))
-    }, 500)
+    const container = containerRef.current
+    if (!container) return
 
-    return () => clearInterval(interval)
+    const totalWidth = container.scrollWidth
+    const viewportWidth = container.offsetWidth
+    const imageWidth = totalWidth / (images.length * 2)
+
+    let animationFrameId: number
+
+    const animate = () => {
+      setOffset((prevOffset) => {
+        const newOffset = (prevOffset + 1) % totalWidth
+        if (newOffset >= totalWidth / 2) {
+          return newOffset - totalWidth / 2
+        }
+        return newOffset
+      })
+      animationFrameId = requestAnimationFrame(animate)
+    }
+
+    animationFrameId = requestAnimationFrame(animate)
+
+    return () => cancelAnimationFrame(animationFrameId)
   }, [])
 
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 bg-dots fade-y"></div>
-      <div className="relative inline-flex min-w-full py-16 w-max">
+      <div className="bg-dots fade-y absolute inset-0"></div>
+      <div className="relative overflow-hidden py-16">
         <div
-          className="inline-flex justify-around flex-shrink-0 min-w-full"
+          ref={containerRef}
+          className="inline-flex w-max min-w-full"
           style={{
-            transform: `translateX(-${offset}%)`,
-            transition: "transform 5000ms linear",
+            transform: `translateX(-${offset}px)`,
+            transition: "transform 50ms linear",
           }}
         >
           {[...images, ...images].map((image, index) => (
             <div key={index} className="flex-shrink-0 px-6">
-              <div className="relative overflow-hidden transition duration-300 shadow-lg group rotate-1 rounded-xl shadow-black/30 hover:-rotate-1 hover:scale-110 hover:shadow-xl hover:shadow-black/30">
+              <div className="group relative rotate-1 overflow-hidden rounded-xl shadow-lg shadow-black/30 transition duration-300 hover:-rotate-1 hover:scale-110 hover:shadow-xl hover:shadow-black/30">
                 <div className="aspect-[8/10] h-80 scale-110 transition-transform duration-300 group-hover:scale-100">
                   <img
                     src={image.src}
                     alt={image.alt}
-                    className="object-cover w-full h-full"
+                    className="h-full w-full object-cover"
                   />
-                  <div className="absolute inset-0 pointer-events-none bg-noise opacity-20"></div>
+                  <div className="bg-noise pointer-events-none absolute inset-0 opacity-20"></div>
                 </div>
                 <div className="pointer-events-none absolute inset-0 z-10 rounded-xl shadow-[0_1.5px_0_inset_rgba(255,255,255,0.3)]"></div>
               </div>
