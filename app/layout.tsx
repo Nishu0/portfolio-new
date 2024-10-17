@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   authors: [
     {
       name: "Nisarg Thakkar",
-      url: "https://taitd.io.vn",
+      url: "https://www.nisargthakkar.co/",
     },
   ],
   creator: "Nisarg Thakkar",
@@ -134,7 +134,7 @@ export default function RootLayout({
           <script
             defer
             src="https://analytics.us.umami.is/script.js"
-            data-website-id="918e78b6-7a58-445d-9c09-1c0e53d6fe18"
+            data-website-id="6cc85752-c450-4ab2-933a-d216b91c0416"
           ></script>
         )}
       </body>
