@@ -14,7 +14,7 @@ const Intro = () => {
   return (
     <section className="flex min-h-[calc(100vh-80px)] items-center">
       <div className="container flex flex-col items-center justify-between gap-12 lg:flex-row">
-        <div className="flex flex-col gap-y-4 text-center lg:w-1/2 lg:text-left">
+        <div className="flex flex-col text-center gap-y-4 lg:w-1/2 lg:text-left">
           <motion.span
             className="text-2xl font-bold leading-[1.5] sm:text-4xl lg:text-6xl"
             initial={{ opacity: 0, y: 20 }}
@@ -37,9 +37,11 @@ const Intro = () => {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.5 }}
           >
-            I'm passionate about building innovative products on the web keeping
-            good design in mind. I like learning new technologies, and
-            contributing to open source.
+            I am a Web3 developer with experience in Move (Rust) smart contracts
+            and EVM chains. I can create anything using TypeScript and have a
+            strong command of Next.js. Besides coding, I enjoy participating in
+            community activities like hackathons, conferences, meet-ups, and
+            similar events.
           </motion.span>
           <motion.div
             className="flex flex-col items-center justify-center gap-2 text-lg font-medium sm:flex-row lg:justify-start"
@@ -52,7 +54,7 @@ const Intro = () => {
               className={cn(buttonVariants({ variant: "default" }), "group")}
             >
               Contact me
-              <Icons.arrowRight className="ml-2 h-4 w-4 transition group-hover:translate-x-1" />
+              <Icons.arrowRight className="w-4 h-4 ml-2 transition group-hover:translate-x-1" />
             </Link>
 
             <Link
@@ -62,7 +64,7 @@ const Intro = () => {
               className={cn(buttonVariants({ variant: "outline" }), "group")}
             >
               My Resume
-              <Icons.download className="ml-2 h-4 w-4 transition group-hover:translate-y-1" />
+              <Icons.download className="w-4 h-4 ml-2 transition group-hover:translate-y-1" />
             </Link>
           </motion.div>
         </div>
