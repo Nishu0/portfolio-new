@@ -1,0 +1,484 @@
+---
+title: "My Journey into Zig: Building an HTTP Server from Scratch"
+description: "It all started with a casual conversation with a friend who threw me an interesting challenge: Why dont you try building an HTTP server in Zig without any external libraries?"
+date: "2025-02-09"
+image: /images/blog/zig.png
+series:
+  order: 1
+  title: "Fu*k Around"
+authors:
+  - Nisarg
+---
+
+## The Unexpected Introduction
+
+It all started with a casual conversation with a friend who threw me an interesting challenge: "Why don't you try building an HTTP server in Zig without any external libraries?" As someone comfortable with TypeScript/JavaScript backends, this piqued my interest. The idea of building something from scratch in a systems programming language was both intimidating and exciting.
+
+## What is Zig?
+
+Zig is a modern systems programming language that aims to be a better C. Created by Andrew Kelley in 2016, it focuses on maintaining simplicity while providing powerful features.
+
+## Why Zig?
+
+Here's what makes Zig special:
+
+### 1. No Hidden Control Flow
+
+#### What does this mean?
+
+In many languages, there are operations that secretly do more than what you see in the code. Zig makes everything explicit - what you see is what you get.
+
+#### Comparison with Other Languages:
+
+**TypeScript Example (Hidden Control Flow)**:
+
+```typescript
+// This innocent-looking code can throw exceptions you might not expect
+const value = array[0] // Could throw if array is empty
+const result = JSON.parse(data) // Could throw parsing error
+```
+
+**Rust Example (Hidden Control Flow)**:
+
+```rust
+// The `?` operator secretly returns from the function on error
+fn get_data() -> Result {
+    let file = File::open("data.txt")?;  // Hidden return on error
+    let content = file.read_to_string()?; // Hidden return on error
+    Ok(content)
+}
+```
+
+**Zig Example (Explicit Control Flow)**:
+
+```zig
+// Errors must be handled explicitly with 'try' or 'catch'
+fn getData() ![]u8 {
+    var file = try std.fs.openFile("data.txt", .{});
+    defer file.close();
+    var content = try file.readToEndAlloc(allocator, max_size);
+    return content;
+}
+```
+
+### 2. No Hidden Memory Allocations
+
+#### What does this mean?
+
+In Zig, when code needs to allocate memory, it must do so explicitly. This makes it easier to understand performance characteristics and prevent memory leaks.
+
+#### Comparison:
+
+**TypeScript Example (Hidden Allocations)**:
+
+```typescript
+// Many hidden allocations happening here
+const arr = []
+arr.push(1) // Array might reallocate
+const str = "Hello " + name // Creates new string allocation
+```
+
+**Rust Example (Semi-Hidden Allocations)**:
+
+```rust
+// Vec and String allocate memory behind the scenes
+let mut vec = Vec::new();
+vec.push(1);  // Might reallocate
+let s = String::from("hello");  // Allocates memory
+```
+
+**Zig Example (Explicit Allocations)**:
+
+```zig
+// All allocations are explicit
+var list = std.ArrayList(i32).init(allocator);
+defer list.deinit();
+try list.append(1);  // Must provide allocator explicitly
+```
+
+### 3. Compile-time Features
+
+#### What does this mean?
+
+Zig can run code during compilation, which helps catch errors early and generate optimized code.
+
+#### Comparison:
+
+**TypeScript Example**:
+
+```typescript
+// Type checking happens at compile time, but no real code execution
+type Vector = [number, number]
+const v: Vector = [1, 2]
+```
+
+**Rust Example**:
+
+```rust
+// Const evaluation is possible but limited
+const ARRAY: [i32; 3] = [1, 2, 3];
+const SUM: i32 = ARRAY.iter().sum();  // Limited compile-time computation
+```
+
+**Zig Example**:
+
+```zig
+// Full code execution at compile time
+const Point = struct {
+    x: i32,
+    y: i32,
+
+    // This runs during compilation
+    pub fn origin() Point {
+        return Point{ .x = 0, .y = 0 };
+    }
+};
+
+// Compute values at compile time with comptime
+comptime {
+    const p = Point.origin();
+    @compileError(if (p.x != 0) "Invalid origin" else "");
+}
+```
+
+### 4. C Interoperability
+
+#### What does this mean?
+
+Zig can use C code directly without any special bindings or wrappers.
+
+#### Comparison:
+
+**TypeScript Example**:
+
+```typescript
+// Needs complex bindings like node-ffi or WebAssembly
+const ffi = require("ffi-napi")
+const lib = ffi.Library("libc", {
+  printf: ["int", ["string"]],
+})
+```
+
+**Rust Example**:
+
+```rust
+// Needs extern blocks and unsafe
+#[link(name = "c")]
+extern "C" {
+    fn printf(format: *const c_char, ...) -> c_int;
+}
+```
+
+**Zig Example**:
+
+```zig
+// Direct C integration
+const c = @cImport({
+    @cInclude("stdio.h");
+});
+
+pub fn main() void {
+    _ = c.printf("Hello %s\n", "world");
+}
+```
+
+## Summary: Why Choose Zig?
+
+1. **Predictability**: Everything is explicit - no surprises in control flow or memory allocation
+2. **Learning Curve**: While it's a systems language, its simplicity makes it easier to learn than Rust
+3. **Performance**: Direct control over memory and computation without hidden costs
+4. **Safety**: Compile-time checks catch many errors before your code runs
+5. **Versatility**: Great for both high-level application code and low-level systems programming
+
+## Best Used For:
+
+- Systems programming
+- Performance-critical applications
+- Embedded systems
+- Projects that need C interoperability
+- Learning about low-level programming concepts
+
+Coming from TypeScript, Zig might feel more verbose at first, but this verbosity brings clarity and control. Coming from Rust, you'll find Zig simpler but with fewer guardrails - it trusts you more but expects you to be more careful.
+
+You can read the official documentation [here](https://ziglang.org/learn/why_zig_rust_d_cpp/).
+
+## Setting Up Zig🧩
+
+Getting started with Zig is surprisingly straightforward. Here's how I set up my development environment:
+
+First, download Zig from the official website (https://ziglang.org/download/)
+Add Zig to your system's PATH
+Verify the installation:
+
+```zig
+$ zig version
+0.11.0
+```
+
+Hello, Zig!
+Let's start with the classic "Hello, World!" to understand Zig's basic syntax:
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    const stdout = std.io.getStdOut().writer();
+    try stdout.print("Hello, World!\n", .{});
+}
+```
+
+Let's break this down:
+
+- `const std = @import("std")` imports Zig's standard library
+- `pub fn main()` declares our main function
+- `!void` indicates the function can return an error or nothing
+- `try` is used for error handling
+- `.{}` is an empty tuple for format arguments
+
+## Understanding Zig's Primitive Types
+
+Before we dive into building our HTTP server, let's understand Zig's primitive types with some practical examples:
+
+```zig
+const std = @import("std");
+
+pub fn main() !void {
+    std.debug.print("Hello, world!\n", .{});
+    //Zig supports various forms of integers, floating point numbers, and pointers
+    const x: i8 = -100; // Signed 8-bit integer
+    const y: u8 = 120; // Unsigned 8-bit integer
+    const z: f32 = 100.324; // 32-bit floating point
+
+    std.debug.print("x={}\n", .{x}); // x=-100
+    std.debug.print("y={}\n", .{y}); // y=120
+    std.debug.print("z={d:3.2}\n", .{z}); // z=100.32
+
+    //enum
+    const Color = enum {
+        red,
+        green,
+        blue,
+    };
+    const c: Color = Color.red;
+    std.debug.print("c={}\n", .{c}); // c=red
+    //Zig lets you override the ordinal values of enums as follows:
+    const LogType = enum(u32) { info = 200, err = 500, warn = 600 };
+    const log_type: LogType = LogType.info;
+    std.debug.print("log_type={}\n", .{log_type});
+
+    //Arrays
+    const vowels = [5]u8{ 'a', 'e', 'i', 'o', 'u' };
+    std.debug.print("{s}\n", .{vowels}); // aeiou
+    std.debug.print("{d}\n", .{vowels.len}); // 5
+
+    // Extended syntax for arrays
+    // we can omit the size since it’s known at compile time and that's why we can use the _ symbol
+    const numbers = [_]i32{ 1, 2, 3, 4, 5 };
+    std.debug.print("{any}\n", .{numbers}); // [1, 2, 3, 4, 5]
+
+    //Slices
+    const testingNumber = [5]i32{ 1, 2, 3, 4, 5 };
+    const slice = testingNumber[0..2];
+    std.debug.print("{any}\n", .{slice}); // [1, 2]
+
+    // strings
+    const name = "Nisarg Thakkar!";
+    std.debug.print("{s}\n", .{name}); // Nisarg Thakkar!
+    std.debug.print("{}\n", .{@TypeOf(name)}); // *const [15:0]u8
+    std.debug.print("{d}\n", .{name.len}); // 15
+
+    // Zig strings are immutable, so you can’t change them after creation.
+    // To modify a string, you need to convert it to a mutable array.
+    const allocator = std.heap.page_allocator;
+    //std.heap.page_allocator is a general-purpose allocator in Zig that
+    // manages memory using OS pages. It provides dynamic memory allocation,
+    // meaning memory is requested at runtime instead of being statically defined.
+    var mutable_name = try allocator.dupe(u8, name);
+    // allocator.dupe(u8, name) duplicates (copies) the string name into newly
+    // allocated memory. dupe takes a type and original slice, and returns
+    // a new slice with the same contents.
+    // The result (mutable_name) is now a mutable array of u8 with the same contents as name.
+    defer allocator.free(mutable_name);
+    // defer is used to ensure that the memory allocated by allocator.dupe
+    // is freed when the mutable_name variable goes out of scope.
+    mutable_name[0] = 'B';
+    // mutable_name is now a mutable array of u8 with the same contents
+    // as name, but with the first character changed to 'B'.
+    std.debug.print("{s}\n", .{mutable_name}); // Bisarg Thakkar!
+
+    // structs and unions
+    const person = struct {
+        name: []const u8,
+        age: u8,
+    };
+    const p: person = person{ .name = "Nisarg", .age = 20 };
+    std.debug.print("{s}\n", .{p.name}); // Nisarg
+
+    //Zig unions are like structs, but they can have only one active field at a time.
+    const union_person = union(enum) {
+        name: []const u8,
+        age: u8,
+    };
+    const up: union_person = union_person{ .name = "Nisarg" };
+    std.debug.print("{s}\n", .{up.name}); // Nisarg
+
+    // Zig supports anonymous structs, which are structs without a name.
+    const anonymous_person = struct {
+        name: []const u8,
+        age: u8,
+    };
+    const ap: anonymous_person = anonymous_person{ .name = "Nisarg", .age = 20 };
+    std.debug.print("{s}\n", .{ap.name}); // Nisarg
+
+    // control flow structures
+    // Zig supports if, else if, else, and switch statements.
+    const score: u8 = 100;
+
+    if (score >= 90) {
+        std.debug.print("Congrats!\n", .{});
+        std.debug.print("{s}\n", .{"*" ** 10});
+    } else if (score >= 50) {
+        std.debug.print("Congrats!\n", .{});
+    } else {
+        std.debug.print("Try again...\n", .{});
+    }
+
+    // switch statements
+    const marks: u8 = 88;
+
+    switch (marks) {
+        90...100 => {
+            std.debug.print("Congrats!\n", .{});
+            std.debug.print("{s}\n", .{"*" ** 10});
+        },
+        50...89 => {
+            std.debug.print("Congrats!\n", .{});
+        },
+        else => {
+            std.debug.print("Try again...\n", .{});
+        },
+    }
+
+    //while statements
+    var i: u8 = 0;
+    while (i < 10) : (i += 1) {
+        std.debug.print("{d}\n", .{i});
+    }
+
+    // for statements
+    for (0..10) |_| {
+        std.debug.print("{d}\n", .{i});
+    }
+
+    // for statements with break and continue
+    for (0..10) |_| {
+        if (i == 5) {
+            break;
+        }
+        std.debug.print("{d}\n", .{i});
+    }
+
+    // for statements with continue
+    for (0..10) |_| {
+        if (i == 5) {
+            continue;
+        }
+        std.debug.print("{d}\n", .{i});
+    }
+
+    // Zig supports the following compound assignment operators: +=, -=, *=, /=, %=, &=, |=, ^=, <<=, >>=
+    var a: u8 = 10;
+    a += 5;
+    std.debug.print("{d}\n", .{a}); // 15
+
+}
+
+```
+
+## Building an HTTP Server from Scratch
+
+Now that we understand the basics, let's build something real: a simple HTTP server using Zig's native HTTP capabilities.
+
+### Understanding Zig's Native HTTP Support
+
+Zig provides built-in networking and HTTP functionality through its standard library. We'll use:
+
+- `std.net` for network operations
+- `std.http` for HTTP protocol handling
+
+Here's our complete HTTP server implementation:
+
+```zig
+const std = @import("std");
+const net = std.net;
+const http = std.http;
+
+pub fn main() !void {
+    const addr = net.Address.parseIp4("127.0.0.1", 9090) catch |err| {
+        std.debug.print("An error occurred while resolving the IP address: {}\n", .{err});
+        return;
+    };
+
+    var server = try addr.listen(.{});
+    start_server(&server);
+}
+
+fn start_server(server: *net.Server) void {
+    while(true) {
+        var connection = server.accept() catch |err| {
+            std.debug.print("Connection to client interrupted: {}\n", .{err});
+            continue;
+        };
+        defer connection.stream.close();
+
+        var read_buffer: [1024]u8 = undefined;
+        var http_server = http.Server.init(connection, &read_buffer);
+
+        var request = http_server.receiveHead() catch |err| {
+            std.debug.print("Could not read head: {}\n", .{err});
+            continue;
+        };
+        handle_request(&request) catch |err| {
+            std.debug.print("Could not handle request: {}", .{err});
+            continue;
+        };
+    }
+}
+
+fn handle_request(request: *http.Server.Request) !void {
+    std.debug.print("Handling request for {s}\n", .{request.head.target});
+    try request.respond("Hello http!\n", .{});
+}
+```
+
+Let's break down the key components:
+
+1. **Server Setup**:
+
+   - We create a server listening on localhost (127.0.0.1) port 9090
+   - `net.Address.parseIp4()` converts the IP and port into a network address
+   - `addr.listen()` creates a listening socket
+
+2. **Connection Handling** (`start_server` function):
+
+   - Runs an infinite loop to accept connections
+   - Uses `defer` to ensure connections are properly closed
+   - Creates a buffer for reading HTTP requests
+   - Initializes an HTTP server for each connection
+
+3. **Request Handling** (`handle_request` function):
+   - Processes incoming HTTP requests
+   - Currently just responds with "Hello http!"
+   - Logs the requested target path
+
+## Taking It Further
+
+If you're interested in building a full-featured backend with Zig, there are several excellent resources to explore:
+
+1. [Building a Backend with Zap](https://zig.news/renerocksai/introducing-zap-blazingly-fast-backends-in-zig-3jhh)
+2. [HTTP Server Tutorial](https://www.pedaldrivenprogramming.com/2024/03/writing-a-http-server-in-zig/)
+3. [Code With Cypert's Zig Tutorial](https://www.youtube.com/watch?v=lPVc7FDrD7k)
+
+## Conclusion
+
+This journey into Zig has been kinda fun. From understanding its unique features to building a basic HTTP server, we've seen how Zig combines low-level control with high-level clarity. None of this would have been possible without Satyam ([@\_sk1122](https://x.com/_sk1122)) introducing me to Zig.

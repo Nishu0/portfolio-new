@@ -23,9 +23,9 @@ export default function SignInModal() {
     <ResponsiveDialog open={open} onOpenChange={setOpen}>
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
-          <DialogTitle className="text-left text-2xl">Sign in</DialogTitle>
+          <DialogTitle className="text-2xl text-left">Sign in</DialogTitle>
           <DialogDescription className="text-left">
-            to continue to taitd.io.vn
+            to continue to Nisarg Thakkar's blog
           </DialogDescription>
         </ResponsiveDialogHeader>
 

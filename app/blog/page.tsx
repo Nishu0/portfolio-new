@@ -15,7 +15,7 @@ const BlogPage = () => {
     .sort((a, b) => {
       return compareDesc(new Date(a.date), new Date(b.date))
     })
-
+  console.log("posts", posts)
   return (
     <>
       <PageHeading
