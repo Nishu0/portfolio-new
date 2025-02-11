@@ -5,6 +5,7 @@ import "@/styles/globals.css"
 
 import { Metadata } from "next"
 import { TRPCReactProvider } from "@/trpc/react"
+import { Analytics } from "@vercel/analytics/react"
 import { SessionProvider } from "next-auth/react"
 
 import { env } from "@/env"
@@ -109,10 +110,10 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               <div className="pointer-events-none fixed inset-0 z-[99] h-full w-full overflow-hidden bg-[url(/noise.png)] opacity-40 dark:opacity-60" />
-              <div className="flex min-h-screen flex-col">
-                <header className="sticky top-0 z-40 w-full border-b bg-background/90 backdrop-blur-md">
+              <div className="flex flex-col min-h-screen">
+                <header className="sticky top-0 z-40 w-full border-b backdrop-blur-md bg-background/90">
                   <div className="container lg:max-w-4xl xl:max-w-6xl">
-                    <div className="flex h-20 items-center space-x-8 py-6">
+                    <div className="flex items-center py-6 space-x-8 h-20">
                       <Logo />
                       <MainNavbar />
                     </div>
@@ -120,6 +121,7 @@ export default function RootLayout({
                 </header>
                 <main className="container flex-1 py-6 md:py-10 lg:max-w-4xl xl:max-w-6xl">
                   {children}
+                  <Analytics />
                 </main>
                 <Footer />
               </div>
